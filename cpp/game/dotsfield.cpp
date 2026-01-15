@@ -910,8 +910,7 @@ void Board::makeMoveAndCalculateCapturesAndBases(
 
     for(Base& base: moveRecord.bases) {
       if (base.is_real) {
-        const bool suicide = base.pla != pla;
-        if (!suicide) {
+        if (const bool suicide = base.pla != pla; !suicide) {
           captures[loc] = static_cast<Color>(captures[loc] | base.pla);
         }
 
@@ -939,11 +938,11 @@ void Board::calculateOneMoveCaptureAndBasePositionsForDots(vector<Color>& captur
       const Color emptyTerritoryColor = getEmptyTerritoryColor(state);
 
       // It doesn't make sense to calculate capturing when dot placed into own empty territory
-      if (emptyTerritoryColor != P_BLACK) {
+      if (emptyTerritoryColor == C_EMPTY || (emptyTerritoryColor == P_WHITE && rules.multiStoneSuicideLegal)) {
         makeMoveAndCalculateCapturesAndBases(P_BLACK, loc, captures, bases);
       }
 
-      if (emptyTerritoryColor != P_WHITE) {
+      if (emptyTerritoryColor == C_EMPTY || (emptyTerritoryColor == P_BLACK && rules.multiStoneSuicideLegal)) {
         makeMoveAndCalculateCapturesAndBases(P_WHITE, loc, captures, bases);
       }
     }
